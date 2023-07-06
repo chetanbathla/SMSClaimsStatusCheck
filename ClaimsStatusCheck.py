@@ -27,13 +27,13 @@ twilio_client = twilio.Client(account_sid, auth_token)
 def handle_incoming_message(from_number, body):
     # Use GPT-3 to generate a response to the message
     response = openai_client.engine.create_completion(
-        model="gpt-3.5-turbo",, prompt=body, temperature=0.7).text
+        model="gpt-3.5-turbo", prompt=body, temperature=0.7).text
 
     # Check if the message is a question
     if body.endswith("?"):
         # Use GPT-3 to generate an answer to the question
         response = openai_client.engine.create_completion(
-            model="gpt-3.5-turbo",, prompt=body, temperature=0.7).text
+            model="gpt-3.5-turbo", prompt=body, temperature=0.7).text
     elif "inquiry" in body.lower() or "complaint" in body.lower():
         # Handle customer inquiries and complaints
         response = "We apologize for any inconvenience you may have experienced. Please send us more details about your inquiry or complaint, and we will do our best to resolve the issue as soon as possible."
@@ -64,7 +64,7 @@ def handle_incoming_message(from_number, body):
     else:
         # Use GPT-3 to generate a general response
         response = openai_client.engine.create_completion(
-            model="gpt-3.5-turbo",, prompt=body, temperature=0.7).text
+            model="gpt-3.5-turbo", prompt=body, temperature=0.7).text
 
     # Send the response back to the user via SMS
     message = twilio_client.messages.create(
