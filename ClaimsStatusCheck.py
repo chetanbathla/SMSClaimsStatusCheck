@@ -16,11 +16,6 @@ twilio_client = Client(account_sid, auth_token)
 # Set up OpenAI
 openai.api_key = "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"  # Replace with your OpenAI API key
  
-# Handle incoming SMS messages
-# Initialize the OpenAI and Twilio clients
-openai_client = openai.Client(api_key=openai_api_key)
-twilio_client = twilio.Client(account_sid, auth_token)
-
 # Define a function to handle incoming messages
 
 
@@ -32,8 +27,12 @@ def handle_incoming_message(from_number, body):
     # Check if the message is a question
     if body.endswith("?"):
         # Use GPT-3 to generate an answer to the question
-        response = openai_client.engine.create_completion(
-            model="gpt-3.5-turbo", prompt=body, temperature=0.7).text
+        response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a chatbot."},
+            {"role": "user", "content": body},
+        ],)
     elif "inquiry" in body.lower() or "complaint" in body.lower():
         # Handle customer inquiries and complaints
         response = "We apologize for any inconvenience you may have experienced. Please send us more details about your inquiry or complaint, and we will do our best to resolve the issue as soon as possible."
@@ -63,8 +62,12 @@ def handle_incoming_message(from_number, body):
         response = "We would be happy to provide you with more information about our products and services. Please let us know what specific information you are looking for, and we will do our best to help."
     else:
         # Use GPT-3 to generate a general response
-        response = openai_client.engine.create_completion(
-            model="gpt-3.5-turbo", prompt=body, temperature=0.7).text
+       response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a chatbot."},
+            {"role": "user", "content": body},
+        ],)
 
     # Send the response back to the user via SMS
     message = twilio_client.messages.create(
